@@ -14,7 +14,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role_id', 'is_active'
+        'name', 'email', 'password', 'role_id', 'photo_id', 'is_active','password'
     ];
 
     /**
@@ -30,5 +30,10 @@ class User extends Authenticatable
     public function role(){
 
         return $this->belongsTo('App\Role');
+    }
+
+    public function setPasswordAttribute($value){
+
+        $this->attributes['password'] = md5($value);
     }
 }
