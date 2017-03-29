@@ -1,6 +1,8 @@
 <?php
 use App\User;
 use App\Role;
+use App\Photo;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -29,10 +31,9 @@ Route::resource('admin/users', 'AdminUsersController');
 
 
 
-
+/*
 Route::get('/admin', function(){
 
 	return view('admin.index');
 
-});
-
+});*/

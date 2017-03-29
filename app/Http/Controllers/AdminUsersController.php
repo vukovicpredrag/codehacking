@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\User;  //dodao
 use App\Role;  //dodao
+use App\Photo;  //dodao
 use App\Http\Requests\UsersRequest; //dodao
 
 use Illuminate\Http\Request;
@@ -48,11 +49,33 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
-       // return $request->all();
-      User::create($request->all());
+       
+      //User::create($request->all());
+     //return redirect('admin/users');
 
-     return redirect('admin/users');
+        $input = $request->all();
+
+        if( $file = $request->file('photo_id')){
+
+            $name = $file->getClientOriginalName();
+
+            $file->move('images', $name);
+
+            $photo = Photo::create(['file'=>$name]);
+
+
+            $input['photo_id'] = $photo->id;
+        }
+
+
+        User::create($input);
+        return redirect('admin/users');
     }
+
+
+
+
+
 
     /**
      * Display the specified resource.
