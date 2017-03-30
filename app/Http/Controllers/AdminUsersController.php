@@ -7,6 +7,7 @@ use App\User;  //dodao
 use App\Role;  //dodao
 use App\Photo;  //dodao
 use App\Http\Requests\UsersRequest; //dodao
+use App\Http\Requests\EditRequest; //dodao
 
 use Illuminate\Http\Request;
 
@@ -52,6 +53,13 @@ class AdminUsersController extends Controller
        
       //User::create($request->all());
      //return redirect('admin/users');
+if(trim($request->password) == ''){
+    $input = $request->exception('password');  //ugradjenja funkcija ako nema pass
+} else{
+    $input = $request->all();
+}
+
+
 
         $input = $request->all();
 
@@ -96,7 +104,12 @@ class AdminUsersController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.users.edit');
+        $user = User::findOrFail($id);
+
+        $roles = Role::lists('name','id')->all();
+
+
+        return view('admin.users.edit', compact('user','roles'));
     }
 
     /**
@@ -106,9 +119,30 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditRequest $request, $id)
     {
-        //
+       $user = User::findOrFail($id);
+
+
+            $input = $request->all();
+
+              if( $file = $request->file('photo_id')){
+
+            $name = $file->getClientOriginalName();
+
+            $file->move('images', $name);
+
+            $photo = Photo::create(['file'=>$name]);
+
+
+            $input['photo_id'] = $photo->id;
+        }
+
+
+        $user->update($input);
+        return redirect('admin/users');
+
+
     }
 
     /**
