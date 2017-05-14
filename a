@@ -1,0 +1,35 @@
+[33mcommit 424bb60af290592cc00e67c537c4f29985d82aaa[m
+Author: Predrag Vukovic <vukovicpredrag90@gmail.com>
+Date:   Thu Mar 30 22:41:16 2017 +0200
+
+    users sectui working 100% - except security
+
+[33mcommit d6732df0e78db37757cb8b00227f80f1f8109c01[m
+Author: Predrag Vukovic <vukovicpredrag90@gmail.com>
+Date:   Wed Mar 29 23:55:28 2017 +0200
+
+    users with photo create/update working
+
+[33mcommit db75281d53621e30f658d7fe93273544f930c5cc[m
+Author: Predrag Vukovic <vukovicpredrag90@gmail.com>
+Date:   Wed Mar 29 21:59:30 2017 +0200
+
+    users page working without photos
+
+[33mcommit 1123ce1732143e13324b2f5f5fbe1805f76740d6[m
+Author: Predrag Vukovic <vukovicpredrag90@gmail.com>
+Date:   Tue Mar 28 00:03:15 2017 +0200
+
+    dorada prva veca migracija
+
+[33mcommit 15969576ddb3a765eb8c745af1670f523034d627[m
+Author: Predrag Vukovic <vukovicpredrag90@gmail.com>
+Date:   Sun Mar 19 22:38:27 2017 +0100
+
+    setup admin view page
+
+[33mcommit 83541661607c94adf2df412c5acf3b4aae461ab4[m
+Author: Predrag Vukovic <vukovicpredrag90@gmail.com>
+Date:   Fri Mar 17 21:57:00 2017 +0100
+
+    my first commit

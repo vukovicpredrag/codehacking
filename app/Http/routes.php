@@ -16,7 +16,7 @@ use App\Photo;
 
 Route::get('/', function () {
     return view('welcome');
-});
+});		
 
 Route::auth();
 
