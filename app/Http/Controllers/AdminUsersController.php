@@ -1,17 +1,17 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
-use App\User;  //dodao
-use App\Role;  //dodao
-use App\Photo;  //dodao
-use App\Http\Requests\UsersRequest; //dodao
-use App\Http\Requests\EditRequest; //dodao
-
+use App\Http\Requests\UsersEditRequest;
+use App\Http\Requests\UsersRequest;
+use App\Photo;
+use App\Role;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AdminUsersController extends Controller
 {
@@ -22,8 +22,17 @@ class AdminUsersController extends Controller
      */
     public function index()
     {
+        //
 
-    
+
+        $users = User::all();
+
+
+
+        return view('admin.users.index', compact('users'));
+
+
+
     }
 
     /**
@@ -33,9 +42,14 @@ class AdminUsersController extends Controller
      */
     public function create()
     {
-        $roles = Role::lists('name', 'id')->all();
+        //
 
-          return view('admin.users.create', compact('roles'));
+
+        $roles = Role::pluck('name','id')->all();
+
+
+        return view('admin.users.create', compact('roles'));
+
     }
 
     /**
@@ -46,22 +60,29 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
-       
-      //User::create($request->all());
-     //return redirect('admin/users');
-if(trim($request->password) == ''){
-    $input = $request->exception('password');  //ugradjenja funkcija ako nema pass
-} else{
-    $input = $request->all();
-}
+        //
+
+
+        if(trim($request->password) == ''){
+
+            $input = $request->except('password');
+
+        } else{
+
+
+            $input = $request->all();
+
+            $input['password'] = bcrypt($request->password);
+
+        }
 
 
 
-        $input = $request->all();
+        if($file = $request->file('photo_id')) {
 
-        if( $file = $request->file('photo_id')){
 
-            $name = $file->getClientOriginalName();
+            $name = time() . $file->getClientOriginalName();
+
 
             $file->move('images', $name);
 
@@ -69,17 +90,24 @@ if(trim($request->password) == ''){
 
 
             $input['photo_id'] = $photo->id;
+
+
         }
 
 
         User::create($input);
-        return redirect('admin/users');
+
+
+        return redirect('/admin/users');
+
+
+//        return $request->all();
+
+
+
+
+
     }
-
-
-
-
-
 
     /**
      * Display the specified resource.
@@ -89,7 +117,11 @@ if(trim($request->password) == ''){
      */
     public function show($id)
     {
-        return view('admin.users.show');
+        //
+
+        return view('admin.uses.show');
+
+
     }
 
     /**
@@ -100,12 +132,16 @@ if(trim($request->password) == ''){
      */
     public function edit($id)
     {
+        //
+
         $user = User::findOrFail($id);
 
-        $roles = Role::lists('name','id')->all();
+        $roles = Role::pluck('name','id')->all();
 
 
         return view('admin.users.edit', compact('user','roles'));
+
+
     }
 
     /**
@@ -115,16 +151,33 @@ if(trim($request->password) == ''){
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EditRequest $request, $id)
+    public function update(UsersRequest $request, $id)
     {
-       $user = User::findOrFail($id);
+        //
+
+        $user = User::findOrFail($id);
+
+
+        if(trim($request->password) == ''){
+
+            $input = $request->except('password');
+
+        } else{
 
 
             $input = $request->all();
 
-              if( $file = $request->file('photo_id')){
+            $input['password'] = bcrypt($request->password);
 
-            $name = $file->getClientOriginalName();
+        }
+
+
+
+
+        if($file = $request->file('photo_id')){
+
+
+            $name = time() . $file->getClientOriginalName();
 
             $file->move('images', $name);
 
@@ -132,11 +185,19 @@ if(trim($request->password) == ''){
 
 
             $input['photo_id'] = $photo->id;
+
+
         }
 
 
+
         $user->update($input);
-        return redirect('admin/users');
+
+
+        return redirect('/admin/users');
+
+
+
 
 
     }
@@ -150,5 +211,24 @@ if(trim($request->password) == ''){
     public function destroy($id)
     {
         //
+
+        $user = User::findOrFail($id);
+
+
+        unlink(public_path() . $user->photo->file);
+
+
+        $user->delete();
+
+
+        Session::flash('deleted_user','The user has been deleted');
+
+
+        return redirect('/admin/users');
+
+
+
+
+
     }
 }
