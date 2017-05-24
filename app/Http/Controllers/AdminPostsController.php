@@ -83,7 +83,12 @@ class AdminPostsController extends Controller
      */
     public function edit($id)
     {
-         return view('admin.posts.edit');  
+        $post = Post::findOrFail($id);
+        $category = Category::lists('name','id')->all();
+
+         return view('admin.posts.edit', compact('post', 'category'));  
+
+
            }
 
     /**
@@ -95,7 +100,22 @@ class AdminPostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $input = $request->all();
+
+        $user = Auth::user(); // dobavljanje usera;
+
+            if($file = $request->file('photo_id')){
+
+                $name = time() . $file->getClientOriginalName();
+                $file->move('images', $name);
+                $photo = Photo::create(['file'=>$name]);
+
+                $input['photo_id'] = $photo->id;
+            }
+
+          Auth::user()->posts()->whereId($id)->first()->update($input);  //veze sa post User Modelu, user dobio POST_ID
+
+        return redirect('/admin/posts');
     }
 
     /**
@@ -106,6 +126,17 @@ class AdminPostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+       $post = Post::findOrFail($id);
+
+        //unlink(public_path() . $post->photo->file);
+
+        $post->delete();
+
+        return redirect('/admin/posts');
+
+
+        //Session::flash('deleted_user','The user has been deleted');
+
+
     }
 }
