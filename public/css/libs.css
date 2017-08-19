@@ -2108,3 +2108,6 @@ table.dataTable thead .sorting:after {
     color: #df8a13;
 }
 /*# sourceMappingURL=libs.css.map */
+*{
+	background-color: red;
+}
