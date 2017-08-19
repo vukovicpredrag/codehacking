@@ -72,6 +72,7 @@ if(trim($request->password) == ''){
         }
 
 
+
         User::create($input);
         return redirect('admin/users');
     }
